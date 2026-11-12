@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Forensic Report | {% if analysis %}@{{ analysis.username }}{% else %}Audit System{% endif %}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold text-white mb-1">Cybersecurity Forensic Audit Report</h3>
+    <p class="text-muted small mb-0">Official Intelligence Certificate &amp; Technical Risk Evaluation</p>
+  </div>
+  {% if analysis %}
+    <a href="{% url 'download_pdf' analysis.pk %}" class="btn btn-danger">
+      <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download Official PDF
+    </a>
+  {% endif %}
+</div>
+
+{% if analysis %}
+  <!-- Printable Forensic Certificate Container -->
+  <div class="cyber-card p-4 p-md-5 mb-4" style="background: linear-gradient(180deg, #131c2d 0%, #0d1320 100%); border: 1px solid var(--cyber-border-glow);">
+    <!-- Certificate Header -->
+    <div class="d-flex flex-wrap align-items-start justify-content-between border-bottom pb-4 mb-4" style="border-color: var(--cyber-border) !important;">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <div class="brand-icon" style="width: 32px; height: 32px; font-size: 1rem;">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <span class="fw-bold text-white fs-5">CYBER DEFENDER INTELLIGENCE AUDIT</span>
+        </div>
+        <div class="text-muted small">W3C OWL 2 Semantic Reasoning &amp; Random Forest Classification</div>
+      </div>
+      <div class="text-md-end mt-2 mt-md-0">
+        <div class="text-white small fw-bold font-monospace">REPORT-REF: #{{ analysis.pk }}-{{ analysis.username|upper }}</div>
+        <div class="text-muted" style="font-size: 0.75rem;">TIMESTAMP: {{ analysis.created_at|date:"Y-m-d H:i:s" }} UTC</div>
+        <span class="badge badge-cyber-success" style="font-size: 0.7rem;"><i class="bi bi-check-circle me-1"></i> CRYPTOGRAPHICALLY VALIDATED</span>
+      </div>
+    </div>
+
+    <!-- Executive Verdict Box -->
+    <div class="p-4 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="text-muted small text-uppercase fw-semibold mb-1">Target Subject</div>
+          <h3 class="text-white fw-bold mb-1">@{{ analysis.username }}</h3>
+          <p class="text-muted mb-0 small">{{ analysis.explanation_summary }}</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <div class="text-muted small mb-1">Overall Risk Verdict</div>
+          {% if analysis.risk_level == 'High' %}
+            <span class="badge badge-cyber-danger fs-5 px-3 py-2">HIGH RISK ({{ analysis.overall_risk_score|floatformat:1 }}/100)</span>
+          {% elif analysis.risk_level == 'Medium' %}
+            <span class="badge badge-cyber-warning fs-5 px-3 py-2">MEDIUM RISK ({{ analysis.overall_risk_score|floatformat:1 }}/100)</span>
+          {% else %}
+            <span class="badge badge-cyber-success fs-5 px-3 py-2">LOW RISK ({{ analysis.overall_risk_score|floatformat:1 }}/100)</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadata Section -->
+    <h5 class="text-white fw-bold mb-3">1. Target Profile Attribute Summary</h5>
+    <div class="table-responsive mb-4">
+      <table class="table table-cyber mb-0">
+        <tbody>
+          <tr>
+            <td class="text-muted">Followers: <span class="text-white fw-bold ms-1">{{ analysis.followers_count }}</span></td>
+            <td class="text-muted">Following: <span class="text-white fw-bold ms-1">{{ analysis.following_count }}</span></td>
+            <td class="text-muted">Posts: <span class="text-white fw-bold ms-1">{{ analysis.posts_count }}</span></td>
+            <td class="text-muted">Account Age: <span class="text-white fw-bold ms-1">{{ analysis.account_age_days }} days</span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">Follower Ratio: <span class="text-info fw-bold ms-1">{{ analysis.follower_following_ratio|floatformat:3 }}</span></td>
+            <td class="text-muted">Engagement: <span class="text-purple fw-bold ms-1" style="color: #c084fc;">{{ analysis.engagement_rate|floatformat:2 }}%</span></td>
+            <td class="text-muted">Avatar: <span class="text-white ms-1">{% if analysis.has_profile_pic %}Yes{% else %}No{% endif %}</span></td>
+            <td class="text-muted">Verified: <span class="text-white ms-1">{% if analysis.is_verified %}Verified{% else %}No{% endif %}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Dual Engine Section -->
+    <h5 class="text-white fw-bold mb-3">2. Dual-Engine Intelligence Diagnostics</h5>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <div class="fw-bold text-info mb-1"><i class="bi bi-robot me-1"></i> Machine Learning (Random Forest)</div>
+          <ul class="text-muted small ps-3 mb-0">
+            <li>Classification: <b class="text-white">{{ analysis.ml_prediction }}</b></li>
+            <li>Fake Probability: <b class="text-info">{{ analysis.ml_fake_probability|floatformat:3 }}</b></li>
+            <li>Confidence Rating: <b class="text-white">{{ analysis.ml_confidence|floatformat:1 }}%</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <div class="fw-bold text-purple mb-1" style="color: #c084fc;"><i class="bi bi-diagram-3 me-1"></i> Semantic Ontology Engine</div>
+          <ul class="text-muted small ps-3 mb-0">
+            <li>Semantic Verdict: <b class="text-white">{{ analysis.ontology_verdict }}</b></li>
+            <li>Risk Score: <b class="text-purple" style="color: #c084fc;">{{ analysis.ontology_risk_score|floatformat:1 }} / 100</b></li>
+            <li>Inferred Concepts: <b class="text-white">{% for c in analysis.ontology_inferred_classes %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forensic Indicators Triggered -->
+    <h5 class="text-white fw-bold mb-3">3. Forensic Rules &amp; Behavioral Flags</h5>
+    <div class="p-3 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+      <ul class="text-muted small mb-0 ps-3">
+        {% for r in analysis.flagged_reasons %}
+          <li class="py-1 text-light">{{ r }}</li>
+        {% empty %}
+          <li class="py-1 text-success">No forensic anomalies or rule violations detected.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Legal & Technical Disclaimer -->
+    <div class="p-3 rounded-3 border-top" style="background: rgba(0, 0, 0, 0.2); border-color: var(--cyber-border) !important;">
+      <div class="text-muted" style="font-size: 0.72rem; line-height: 1.4;">
+        <b>FORENSIC INTELLIGENCE DISCLAIMER:</b> This automated forensic report is synthesized using machine learning statistical distributions and deterministic OWL 2 semantic reasoning axioms. Indicators are probabilistic and heuristic evidence for threat risk evaluation; suspicious indicators do not constitute legal proof of malicious fraud or impersonation.
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="cyber-card text-center py-5">
+    <i class="bi bi-file-earmark-x fs-1 text-muted d-block mb-3"></i>
+    <h4 class="text-white fw-bold">No Audit Report Selected</h4>
+    <p class="text-muted small mb-3">Select an analysis from Detection History or scan a profile to generate a forensic report.</p>
+    <a href="{% url 'profile_check' %}" class="btn btn-cyber-primary">Run Profile Analysis</a>
+  </div>
+{% endif %}
+{% endblock %}

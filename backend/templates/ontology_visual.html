@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Ontology Visualizer | Fake Profile Detection System{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold text-white mb-1">Interactive Ontology Visualizer</h3>
+    <p class="text-muted small mb-0">W3C OWL 2 Knowledge Taxonomy, Axioms, and Semantic Forensic Rules</p>
+  </div>
+  <a href="/static/ontology/fake_profile_ontology.owl" download class="btn btn-cyber-primary" target="_blank">
+    <i class="bi bi-download me-1"></i> Download OWL Ontology
+  </a>
+</div>
+
+<!-- Ontology Stats Bar -->
+<div class="row g-3 mb-4">
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">Total Triples</div>
+      <div class="h4 fw-bold text-info mb-0">{{ stats.total_triples|default:"48+" }}</div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">OWL Classes</div>
+      <div class="h4 fw-bold text-white mb-0">{{ stats.classes_count|default:"11" }}</div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">Object Properties</div>
+      <div class="h4 fw-bold text-purple mb-0" style="color: #c084fc;">{{ stats.object_properties_count|default:"3" }}</div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">Data Properties</div>
+      <div class="h4 fw-bold text-warning mb-0">{{ stats.datatype_properties_count|default:"11" }}</div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">Named Individuals</div>
+      <div class="h4 fw-bold text-success mb-0">{{ stats.named_individuals_count|default:"10" }}</div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="cyber-card p-3 text-center">
+      <div class="text-muted small">Reasoner Format</div>
+      <div class="h6 fw-bold text-light mb-0 mt-1">OWL 2 / RDF-XML</div>
+    </div>
+  </div>
+</div>
+
+<!-- Class Taxonomy Visual Tree -->
+<div class="cyber-card mb-4">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-diagram-3 text-info fs-5"></i>
+    <h5 class="text-white fw-bold mb-0">Ontology Taxonomy Hierarchy</h5>
+  </div>
+  <p class="text-muted small mb-4">Class hierarchy parsed from <span class="text-info font-monospace">fake_profile_ontology.owl</span>:</p>
+
+  <div class="row g-3">
+    <!-- Root -->
+    <div class="col-12 text-center mb-2">
+      <div class="d-inline-block px-4 py-2 rounded-3 fw-bold" style="background: rgba(99, 102, 241, 0.2); border: 2px solid var(--cyber-indigo); color: #fff;">
+        <i class="bi bi-box me-1"></i> fpo:SocialMediaProfile (Root Concept)
+      </div>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="col-md-6">
+      <div class="p-3 rounded-3 h-100" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2);">
+        <div class="d-flex align-items-center gap-2 mb-2 text-success fw-bold">
+          <i class="bi bi-shield-check"></i> fpo:AuthenticProfile
+        </div>
+        <p class="text-muted small mb-3">Human-operated accounts demonstrating balanced social connections.</p>
+        
+        <div class="ps-3 border-start border-success border-opacity-50 d-flex flex-column gap-2">
+          <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+            <span class="text-white small fw-bold">fpo:VerifiedAuthorityProfile</span>
+            <div class="text-muted" style="font-size: 0.72rem;">Celebrity, journalist, corporate brand with identity certification.</div>
+          </div>
+          <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+            <span class="text-white small fw-bold">fpo:RegularOrganicUser</span>
+            <div class="text-muted" style="font-size: 0.72rem;">Authentic human with normal follower-to-following equilibrium.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="p-3 rounded-3 h-100" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+        <div class="d-flex align-items-center gap-2 mb-2 text-danger fw-bold">
+          <i class="bi bi-shield-x"></i> fpo:SuspiciousProfile &rarr; fpo:FakeProfile
+        </div>
+        <p class="text-muted small mb-3">Deceptive, automated, or cloned profiles violating behavioral heuristics.</p>
+        
+        <div class="ps-3 border-start border-danger border-opacity-50 d-flex flex-column gap-2">
+          <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+            <span class="text-danger small fw-bold">fpo:BotSpammerProfile</span>
+            <div class="text-muted" style="font-size: 0.72rem;">Mass follow scripts, zero posts, aggressive promotional handles.</div>
+          </div>
+          <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+            <span class="text-warning small fw-bold">fpo:GhostLurkerProfile</span>
+            <div class="text-muted" style="font-size: 0.72rem;">Dormant sleeper accounts with no content or avatar.</div>
+          </div>
+          <div class="p-2 rounded bg-dark border border-secondary border-opacity-25">
+            <span class="text-danger small fw-bold">fpo:EngagementAnomalyProfile</span>
+            <div class="text-muted" style="font-size: 0.72rem;">Purchased audience accounts with near-zero interactions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Semantic Forensic Rules Table -->
+<div class="cyber-card mb-4">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-cpu text-warning fs-5"></i>
+    <h5 class="text-white fw-bold mb-0">Semantic Forensic Rules &amp; Axioms</h5>
+  </div>
+  <p class="text-muted small mb-3">Deterministic rules evaluated dynamically by the RDFLib inference reasoner:</p>
+
+  <div class="table-responsive">
+    <table class="table table-cyber mb-0">
+      <thead>
+        <tr>
+          <th>Rule Identifier</th>
+          <th>Semantic Rule Name</th>
+          <th>Logical Precondition</th>
+          <th>Risk Penalty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rules %}
+          <tr>
+            <td class="font-monospace text-info small">{{ r.id }}</td>
+            <td class="fw-semibold text-white">{{ r.name }}</td>
+            <td class="font-monospace text-muted small">{{ r.cond }}</td>
+            <td>
+              <span class="badge {% if '-' in r.impact %}badge-cyber-success{% else %}badge-cyber-danger{% endif %}">
+                {{ r.impact }}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Protégé Integration Guide -->
+<div class="cyber-card">
+  <div class="d-flex align-items-center gap-2 mb-2">
+    <i class="bi bi-info-circle text-primary fs-5"></i>
+    <h5 class="text-white fw-bold mb-0">Protégé 5.x Import Instructions</h5>
+  </div>
+  <p class="text-muted small mb-2">
+    This ontology is fully compliant with Stanford's <b>Protégé</b> knowledge editor:
+  </p>
+  <ol class="text-muted small ps-3 mb-0">
+    <li>Launch Protégé and click <b>File &rarr; Open...</b></li>
+    <li>Select <code class="text-info">ontology/fake_profile_ontology.owl</code> from the project folder.</li>
+    <li>Verify the class hierarchy under the <b>Entities &rarr; Classes</b> tab.</li>
+    <li>Execute consistency reasoning using the <b>HermiT</b> or <b>Pellet</b> reasoner plugin.</li>
+  </ol>
+</div>
+{% endblock %}

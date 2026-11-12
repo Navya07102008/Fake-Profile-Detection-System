@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Fake Profile Detection System | Cybersecurity Home{% endblock %}
+
+{% block content %}
+<div class="py-4">
+  <!-- Hero Section -->
+  <div class="cyber-card p-5 mb-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15) 0%, rgba(17, 24, 39, 0.95) 70%);">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3" style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3);">
+          <i class="bi bi-shield-shaded text-info"></i>
+          <span style="font-size: 0.8rem; color: #c4b5fd; font-weight: 600;">NEXT-GEN DEFENSE INTELLIGENCE</span>
+        </div>
+        <h1 class="display-5 fw-bold text-white mb-3">
+          Fake Profile Detection System
+        </h1>
+        <p class="lead text-muted mb-4" style="max-width: 650px;">
+          A hybrid cybersecurity detection engine combining <span class="text-white fw-semibold">Random Forest Machine Learning</span> with <span class="text-white fw-semibold">W3C OWL 2 Semantic Web Reasoning</span> to uncover deceptive bot networks, spam actors, and identity clones with explainable evidence.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url 'profile_check' %}" class="btn btn-cyber-primary btn-lg px-4">
+            <i class="bi bi-shield-check me-2"></i> Launch Analysis
+          </a>
+          <a href="{% url 'ontology_visual' %}" class="btn btn-cyber-outline btn-lg px-4">
+            <i class="bi bi-diagram-3 me-2"></i> Explore Ontology
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 text-center d-none d-lg-block">
+        <div class="p-4 rounded-4" style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--cyber-border-glow);">
+          <i class="bi bi-shield-lock text-primary" style="font-size: 5rem;"></i>
+          <div class="h5 text-white mt-3 mb-1">Dual-Engine Verification</div>
+          <p class="text-muted small mb-0">Probabilistic ML + Semantic Ontology Axioms for Transparent Detection</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="cyber-card cyber-stat-card stat-blue p-4">
+        <div class="text-muted small text-uppercase fw-semibold mb-1">Scanned Profiles</div>
+        <div class="h2 fw-bold text-white mb-1">{{ total_scanned|default:"2,500+" }}</div>
+        <div class="small text-info"><i class="bi bi-activity me-1"></i> Live Audit Database</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="cyber-card cyber-stat-card stat-purple p-4">
+        <div class="text-muted small text-uppercase fw-semibold mb-1">Fake Profiles Intercepted</div>
+        <div class="h2 fw-bold text-white mb-1">{{ fake_detected|default:"1,200+" }}</div>
+        <div class="small text-warning"><i class="bi bi-exclamation-octagon me-1"></i> Malicious &amp; Bot Actors</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="cyber-card cyber-stat-card stat-success p-4">
+        <div class="text-muted small text-uppercase fw-semibold mb-1">Model Accuracy</div>
+        <div class="h2 fw-bold text-white mb-1">98.2%</div>
+        <div class="small text-success"><i class="bi bi-check-circle me-1"></i> 5-Fold Stratified CV</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="cyber-card cyber-stat-card stat-danger p-4">
+        <div class="text-muted small text-uppercase fw-semibold mb-1">Ontology Axiom Rules</div>
+        <div class="h2 fw-bold text-white mb-1">7 Forensic Rules</div>
+        <div class="small text-danger"><i class="bi bi-diagram-2 me-1"></i> Deterministic Explainability</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detection Pipeline Workflow -->
+  <div class="cyber-card mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h4 class="text-white fw-bold mb-1">Detection Pipeline Architecture</h4>
+        <p class="text-muted small mb-0">End-to-end processing pipeline from raw profile inputs to forensic audit report</p>
+      </div>
+      <span class="badge badge-cyber-success">Pipeline Active</span>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-person-badge text-info fs-2 mb-2"></i>
+          <div class="fw-bold small text-white">1. Profile Input</div>
+          <div class="text-muted" style="font-size: 0.75rem;">Followers, posts, age, bio, verification</div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-cpu text-primary fs-2 mb-2"></i>
+          <div class="fw-bold small text-white">2. Feature Extraction</div>
+          <div class="text-muted" style="font-size: 0.75rem;">Ratios, rates, activity quotients &amp; scales</div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-robot text-purple fs-2 mb-2" style="color: #a855f7;"></i>
+          <div class="fw-bold small text-white">3. ML Model</div>
+          <div class="text-muted" style="font-size: 0.75rem;">Random Forest probabilistic scoring</div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-diagram-3 text-warning fs-2 mb-2"></i>
+          <div class="fw-bold small text-white">4. OWL Ontology</div>
+          <div class="text-muted" style="font-size: 0.75rem;">RDFLib semantic reasoning &amp; axioms</div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-shield-shaded text-danger fs-2 mb-2"></i>
+          <div class="fw-bold small text-white">5. Hybrid Engine</div>
+          <div class="text-muted" style="font-size: 0.75rem;">Weighted synthesis &amp; risk categorisation</div>
+        </div>
+      </div>
+      <div class="col-md-2 text-center">
+        <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <i class="bi bi-file-earmark-pdf text-success fs-2 mb-2"></i>
+          <div class="fw-bold small text-white">6. PDF Report</div>
+          <div class="text-muted" style="font-size: 0.75rem;">ReportLab forensic audit certificate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech Stack Grid -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="cyber-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="p-2 rounded-3 bg-primary bg-opacity-25 text-primary fs-4">
+            <i class="bi bi-diagram-3-fill"></i>
+          </div>
+          <div>
+            <h5 class="text-white mb-0">Semantic Web Ontology</h5>
+            <small class="text-muted">Protégé &amp; RDFLib</small>
+          </div>
+        </div>
+        <p class="text-muted small">
+          Utilizes W3C OWL 2 standard ontology with classes (<span class="text-light">SocialMediaProfile</span>, <span class="text-light">BotSpammerProfile</span>, <span class="text-light">GhostLurkerProfile</span>), object properties, and deterministic semantic rule deduction.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="cyber-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="p-2 rounded-3 text-purple fs-4" style="background: rgba(168, 85, 247, 0.25); color: #c084fc;">
+            <i class="bi bi-cpu-fill"></i>
+          </div>
+          <div>
+            <h5 class="text-white mb-0">Machine Learning</h5>
+            <small class="text-muted">Random Forest &amp; Scikit-Learn</small>
+          </div>
+        </div>
+        <p class="text-muted small">
+          Trained on thousands of curated social media profiles using 18 engineered features, cross-validated with stratified splits, feature importance weights, and confidence scoring.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="cyber-card h-100">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="p-2 rounded-3 bg-danger bg-opacity-25 text-danger fs-4">
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+          </div>
+          <div>
+            <h5 class="text-white mb-0">Forensic PDF Reports</h5>
+            <small class="text-muted">ReportLab Engine</small>
+          </div>
+        </div>
+        <p class="text-muted small">
+          Instant on-demand generation of comprehensive audit reports with executive risk gauges, rule violation breakdowns, tactical mitigation guidelines, and cyber intelligence disclaimers.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

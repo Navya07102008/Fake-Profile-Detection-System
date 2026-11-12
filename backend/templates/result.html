@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Detection Result | @{{ analysis.username }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <h3 class="fw-bold text-white mb-0">Detection Result: @{{ analysis.username }}</h3>
+      {% if analysis.is_verified %}
+        <i class="bi bi-patch-check-fill text-info" title="Verified Account"></i>
+      {% endif %}
+    </div>
+    <p class="text-muted small mb-0">Analysis ID: #{{ analysis.pk }} &bull; Audited on {{ analysis.created_at|date:"M d, Y H:i UTC" }}</p>
+  </div>
+
+  <div class="d-flex gap-2">
+    <a href="{% url 'download_pdf' analysis.pk %}" class="btn btn-danger">
+      <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
+    </a>
+    <a href="{% url 'profile_check' %}" class="btn btn-cyber-outline">
+      <i class="bi bi-arrow-repeat me-1"></i> Scan Another
+    </a>
+  </div>
+</div>
+
+<!-- Main Verdict & Risk Gauge Card -->
+<div class="cyber-card mb-4" style="background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.1) 0%, rgba(17, 24, 39, 0.95) 70%);">
+  <div class="row align-items-center">
+    <!-- Risk Meter Gauge -->
+    <div class="col-md-5 text-center py-3">
+      <div class="risk-meter-container">
+        <div class="risk-circle {% if analysis.risk_level == 'High' %}circle-high{% elif analysis.risk_level == 'Medium' %}circle-med{% else %}circle-low{% endif %}">
+          <div class="text-muted small text-uppercase fw-bold mb-1">Threat Score</div>
+          <div class="display-4 fw-bold {% if analysis.risk_level == 'High' %}text-danger{% elif analysis.risk_level == 'Medium' %}text-warning{% else %}text-success{% endif %}">
+            {{ analysis.overall_risk_score|floatformat:1 }}
+          </div>
+          <div class="text-muted" style="font-size: 0.75rem;">out of 100</div>
+          <div class="mt-2">
+            {% if analysis.risk_level == 'High' %}
+              <span class="badge badge-cyber-danger">HIGH RISK</span>
+            {% elif analysis.risk_level == 'Medium' %}
+              <span class="badge badge-cyber-warning">MEDIUM RISK</span>
+            {% else %}
+              <span class="badge badge-cyber-success">LOW RISK</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Executive Summary & Verdict Details -->
+    <div class="col-md-7 py-3">
+      <div class="mb-3">
+        <span class="text-muted small text-uppercase fw-semibold">Classification Verdict</span>
+        <h2 class="fw-bold {% if analysis.risk_level == 'High' %}text-danger{% elif analysis.risk_level == 'Medium' %}text-warning{% else %}text-success{% endif %} mb-2">
+          {{ analysis.final_verdict }}
+        </h2>
+        <p class="text-light lead fs-6">
+          {{ analysis.explanation_summary }}
+        </p>
+      </div>
+
+      <!-- Dual Score Badges -->
+      <div class="row g-2 mb-3">
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--cyber-border);">
+            <div class="text-muted small">ML Model Probability</div>
+            <div class="h4 fw-bold text-info mb-0">{{ ml_prob_pct }}% Fake</div>
+            <small class="text-muted">Confidence: {{ analysis.ml_confidence|floatformat:1 }}%</small>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--cyber-border);">
+            <div class="text-muted small">Ontology Semantic Score</div>
+            <div class="h4 fw-bold text-purple mb-0" style="color: #c084fc;">{{ analysis.ontology_risk_score|floatformat:1 }} / 100</div>
+            <small class="text-muted">{{ analysis.ontology_verdict }}</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deep Dive Tabs Links -->
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'feature_extraction' analysis.pk %}" class="btn btn-sm btn-cyber-outline">
+          <i class="bi bi-cpu me-1"></i> Feature Breakdown
+        </a>
+        <a href="{% url 'analysis_details' analysis.pk %}" class="btn btn-sm btn-cyber-outline">
+          <i class="bi bi-diagram-2 me-1"></i> ML vs Ontology Analysis
+        </a>
+        <a href="{% url 'risk_assessment' analysis.pk %}" class="btn btn-sm btn-cyber-outline">
+          <i class="bi bi-shield-lock me-1"></i> Risk Assessment Matrix
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Forensic Flagged Reasons & Triggered Rules -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-7">
+    <div class="cyber-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-exclamation-octagon text-warning fs-5"></i>
+        <h5 class="text-white fw-bold mb-0">Forensic Anomaly Rationale</h5>
+      </div>
+      <p class="text-muted small mb-3">Transparent explainability factors identified across the hybrid engines:</p>
+
+      <ul class="list-group list-group-flush bg-transparent">
+        {% for reason in flagged_reasons %}
+          <li class="list-group-item bg-transparent text-light border-secondary border-opacity-25 px-0 py-2.5">
+            <i class="bi bi-caret-right-fill text-primary me-2"></i> {{ reason }}
+          </li>
+        {% empty %}
+          <li class="list-group-item bg-transparent text-success px-0 py-2">
+            <i class="bi bi-check-circle-fill me-2"></i> All indicators within normal organic baseline parameters.
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="cyber-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-diagram-3-fill text-info fs-5"></i>
+        <h5 class="text-white fw-bold mb-0">Ontology Rules Triggered</h5>
+      </div>
+      <div class="d-flex flex-column gap-2">
+        {% for rule in rules_triggered %}
+          <div class="p-2.5 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <span class="fw-bold small text-white">{{ rule.name }}</span>
+              <span class="badge {% if rule.severity == 'HIGH' %}badge-cyber-danger{% elif rule.severity == 'MEDIUM' %}badge-cyber-warning{% else %}badge-cyber-success{% endif %}">
+                {{ rule.severity }}
+              </span>
+            </div>
+            <div class="text-muted" style="font-size: 0.72rem;">{{ rule.description }}</div>
+          </div>
+        {% empty %}
+          <div class="text-muted small py-3 text-center">
+            No heuristic ontology rule breaches detected.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

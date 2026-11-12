@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Analyze Profile | Fake Profile Detection System{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold text-white mb-1">Social Media Profile Forensic Analysis</h3>
+    <p class="text-muted small mb-0">Input account metrics or load pre-configured persona profiles for instant testing</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Input Form Column -->
+  <div class="col-lg-8">
+    <div class="cyber-card">
+      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4" style="border-color: var(--cyber-border) !important;">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-person-bounding-box text-primary fs-5"></i>
+          <h5 class="text-white fw-bold mb-0">Account Parameters</h5>
+        </div>
+        <span class="text-muted small">All numeric fields required</span>
+      </div>
+
+      <form method="post" id="analysisForm">
+        {% csrf_token %}
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">Target Username <span class="text-danger">*</span></label>
+            {{ form.username }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">Account Age (Days) <span class="text-danger">*</span></label>
+            {{ form.account_age_days }}
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label class="form-label text-muted small fw-semibold">Followers Count <span class="text-danger">*</span></label>
+            {{ form.followers_count }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label text-muted small fw-semibold">Following Count <span class="text-danger">*</span></label>
+            {{ form.following_count }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label text-muted small fw-semibold">Total Posts <span class="text-danger">*</span></label>
+            {{ form.posts_count }}
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">Avg Likes per Post</label>
+            {{ form.avg_likes }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-semibold">Avg Comments per Post</label>
+            {{ form.avg_comments }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-semibold">Bio Description / Status Text</label>
+          {{ form.bio_text }}
+        </div>
+
+        <div class="p-3 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="form-check">
+                {{ form.has_profile_pic }}
+                <label class="form-check-label text-white small" for="id_has_profile_pic">
+                  Has Profile Avatar
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                {{ form.is_verified }}
+                <label class="form-check-label text-white small" for="id_is_verified">
+                  Verified Identity Badge
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                {{ form.has_external_url }}
+                <label class="form-check-label text-white small" for="id_has_external_url">
+                  Contains External Link
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-cyber-primary btn-lg w-100 py-3">
+          <i class="bi bi-cpu me-2"></i> Execute Hybrid Forensic Detection
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Persona Loaders & Live Feature Preview Column -->
+  <div class="col-lg-4">
+    <!-- One-Click Personas -->
+    <div class="cyber-card mb-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+        <h5 class="text-white fw-bold mb-0">Benchmark Personas</h5>
+      </div>
+      <p class="text-muted small mb-3">Click any benchmark persona to populate the input parameters instantly:</p>
+
+      <div class="d-flex flex-column gap-2">
+        <button type="button" class="persona-btn" onclick="loadPersona('spambot')">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="fw-bold text-danger"><i class="bi bi-robot me-1"></i> Obvious Spam Bot</span>
+            <span class="badge badge-cyber-danger" style="font-size: 0.65rem;">High Risk</span>
+          </div>
+          <div class="text-muted" style="font-size: 0.72rem;">2.8k Following, 12 Followers, 0 Posts, 7d Old</div>
+        </button>
+
+        <button type="button" class="persona-btn" onclick="loadPersona('influencer')">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="fw-bold text-success"><i class="bi bi-patch-check-fill me-1 text-info"></i> Verified Authority</span>
+            <span class="badge badge-cyber-success" style="font-size: 0.65rem;">Low Risk</span>
+          </div>
+          <div class="text-muted" style="font-size: 0.72rem;">94.5k Followers, Verified badge, 3.4k Likes</div>
+        </button>
+
+        <button type="button" class="persona-btn" onclick="loadPersona('ghost')">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="fw-bold text-warning"><i class="bi bi-ghost me-1"></i> Dormant Ghost Account</span>
+            <span class="badge badge-cyber-warning" style="font-size: 0.65rem;">Medium Risk</span>
+          </div>
+          <div class="text-muted" style="font-size: 0.72rem;">520 Days Old, 0 Posts, No Avatar</div>
+        </button>
+
+        <button type="button" class="persona-btn" onclick="loadPersona('bought_followers')">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="fw-bold text-danger"><i class="bi bi-graph-down me-1"></i> Follower Farm / Anomaly</span>
+            <span class="badge badge-cyber-danger" style="font-size: 0.65rem;">High Risk</span>
+          </div>
+          <div class="text-muted" style="font-size: 0.72rem;">45k Followers, 3 Likes, 45d Old</div>
+        </button>
+
+        <button type="button" class="persona-btn" onclick="loadPersona('organic')">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="fw-bold text-success"><i class="bi bi-person-check-fill me-1"></i> Regular Organic User</span>
+            <span class="badge badge-cyber-success" style="font-size: 0.65rem;">Low Risk</span>
+          </div>
+          <div class="text-muted" style="font-size: 0.72rem;">4.8k Followers, 620 Following, Active</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Feature Preview -->
+    <div class="cyber-card">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-speedometer2 text-info fs-5"></i>
+        <h5 class="text-white fw-bold mb-0">Real-Time Feature Estimator</h5>
+      </div>
+      <div class="d-flex flex-column gap-3">
+        <div class="d-flex align-items-center justify-content-between p-2 rounded" style="background: rgba(255, 255, 255, 0.02);">
+          <span class="text-muted small">Follower Ratio:</span>
+          <span class="fw-bold text-white font-monospace" id="preview-ratio">0.000</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-between p-2 rounded" style="background: rgba(255, 255, 255, 0.02);">
+          <span class="text-muted small">Engagement Rate:</span>
+          <span class="fw-bold text-white font-monospace" id="preview-engagement">0.00%</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-between p-2 rounded" style="background: rgba(255, 255, 255, 0.02);">
+          <span class="text-muted small">Posts Per Day:</span>
+          <span class="fw-bold text-white font-monospace" id="preview-postdaily">0.000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

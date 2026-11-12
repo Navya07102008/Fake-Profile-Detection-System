@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Feature Extraction | @{{ analysis.username }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <a href="{% url 'result' analysis.pk %}" class="btn btn-sm btn-cyber-outline me-2"><i class="bi bi-arrow-left"></i> Back to Result</a>
+      <h3 class="fw-bold text-white mb-0">Feature Extraction Matrix: @{{ analysis.username }}</h3>
+    </div>
+    <p class="text-muted small mb-0">Transformation of raw social profile attributes into numerical vector features</p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Raw Attributes -->
+  <div class="col-lg-5">
+    <div class="cyber-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-card-list text-info fs-5"></i>
+        <h5 class="text-white fw-bold mb-0">Raw Input Attributes</h5>
+      </div>
+      
+      <table class="table table-cyber mb-0">
+        <tbody>
+          <tr>
+            <td class="text-muted">Username</td>
+            <td class="text-white fw-bold text-end">@{{ analysis.username }}</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Followers Count</td>
+            <td class="text-white fw-bold text-end">{{ analysis.followers_count }}</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Following Count</td>
+            <td class="text-white fw-bold text-end">{{ analysis.following_count }}</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Total Posts</td>
+            <td class="text-white fw-bold text-end">{{ analysis.posts_count }}</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Account Age (Days)</td>
+            <td class="text-white fw-bold text-end">{{ analysis.account_age_days }}</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Bio Length</td>
+            <td class="text-white fw-bold text-end">{{ analysis.bio_length }} characters</td>
+          </tr>
+          <tr>
+            <td class="text-muted">Profile Avatar</td>
+            <td class="text-end">
+              {% if analysis.has_profile_pic %}
+                <span class="badge badge-cyber-success">Present</span>
+              {% else %}
+                <span class="badge badge-cyber-danger">Default / Missing</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-muted">Verified Badge</td>
+            <td class="text-end">
+              {% if analysis.is_verified %}
+                <span class="badge badge-cyber-success">Verified</span>
+              {% else %}
+                <span class="badge badge-cyber-warning">Unverified</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Engineered Features -->
+  <div class="col-lg-7">
+    <div class="cyber-card h-100">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <i class="bi bi-cpu-fill text-purple fs-5" style="color: #a855f7;"></i>
+        <h5 class="text-white fw-bold mb-0">Engineered Feature Vectors</h5>
+      </div>
+      <p class="text-muted small mb-3">Derived statistical metrics ingested by the Random Forest model:</p>
+
+      <div class="table-responsive">
+        <table class="table table-cyber mb-0">
+          <thead>
+            <tr>
+              <th>Engineered Feature</th>
+              <th>Calculated Value</th>
+              <th>Forensic Implication</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="fw-semibold text-white">Follower / Following Ratio</div>
+                <div class="text-muted" style="font-size: 0.72rem;">followers / (following + 1)</div>
+              </td>
+              <td class="text-info fw-bold font-monospace">{{ analysis.follower_following_ratio|floatformat:4 }}</td>
+              <td class="small text-muted">Values &lt; 0.05 strongly indicate mass follow spam algorithms.</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="fw-semibold text-white">Engagement Rate</div>
+                <div class="text-muted" style="font-size: 0.72rem;">((likes + comments)/(followers + 1))*100</div>
+              </td>
+              <td class="text-purple fw-bold font-monospace" style="color: #c084fc;">{{ analysis.engagement_rate|floatformat:4 }}%</td>
+              <td class="small text-muted">Near-zero rate on large accounts indicates purchased fake followers.</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="fw-semibold text-white">Posting Velocity</div>
+                <div class="text-muted" style="font-size: 0.72rem;">posts / (age_days + 1)</div>
+              </td>
+              <td class="text-white fw-bold font-monospace">{{ analysis.posts_per_day|floatformat:4 }} / day</td>
+              <td class="small text-muted">Abnormally high velocity points to robotic scheduling scripts.</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="fw-semibold text-white">Handle Digit Density</div>
+                <div class="text-muted" style="font-size: 0.72rem;">digits_in_handle / len(username)</div>
+              </td>
+              <td class="text-warning fw-bold font-monospace">{{ analysis.username_digit_ratio|floatformat:4 }}</td>
+              <td class="small text-muted">Density &gt; 0.40 indicates algorithmic randomly generated handles.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

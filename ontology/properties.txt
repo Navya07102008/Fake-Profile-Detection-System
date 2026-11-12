@@ -1,0 +1,55 @@
+========================================================================
+FAKE PROFILE DETECTION ONTOLOGY - PROPERTIES DEFINITIONS
+========================================================================
+
+--- OBJECT PROPERTIES ---
+
+1. hasRiskCategory
+   - Domain: SocialMediaProfile
+   - Range: RiskCategory
+   - Description: Associates an evaluated profile with its computed risk classification.
+
+2. violatesRule
+   - Domain: SocialMediaProfile
+   - Range: DetectionRule
+   - Description: Links an account to heuristic or semantic detection rules it has breached.
+
+3. exhibitsAnomaly
+   - Domain: SocialMediaProfile
+   - Range: owl:Thing
+   - Description: Semantic marker for anomalous behavioral patterns.
+
+--- DATA PROPERTIES ---
+
+1. hasUsername
+   - Domain: SocialMediaProfile | Range: xsd:string
+
+2. hasFollowersCount
+   - Domain: SocialMediaProfile | Range: xsd:integer
+
+3. hasFollowingCount
+   - Domain: SocialMediaProfile | Range: xsd:integer
+
+4. hasPostsCount
+   - Domain: SocialMediaProfile | Range: xsd:integer
+
+5. hasAccountAgeDays
+   - Domain: SocialMediaProfile | Range: xsd:integer
+
+6. hasBioLength
+   - Domain: SocialMediaProfile | Range: xsd:integer
+
+7. hasProfilePicture
+   - Domain: SocialMediaProfile | Range: xsd:boolean
+
+8. isVerified
+   - Domain: SocialMediaProfile | Range: xsd:boolean
+
+9. hasFollowerRatio
+   - Domain: SocialMediaProfile | Range: xsd:float
+
+10. hasEngagementRate
+    - Domain: SocialMediaProfile | Range: xsd:float
+
+11. hasSuspicionScore
+    - Domain: SocialMediaProfile | Range: xsd:float

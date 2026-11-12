@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Risk Assessment | @{{ analysis.username }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <a href="{% url 'result' analysis.pk %}" class="btn btn-sm btn-cyber-outline me-2"><i class="bi bi-arrow-left"></i> Back to Result</a>
+      <h3 class="fw-bold text-white mb-0">Risk Assessment Matrix: @{{ analysis.username }}</h3>
+    </div>
+    <p class="text-muted small mb-0">Multi-tier risk categorisation and tactical response protocols</p>
+  </div>
+</div>
+
+<!-- Risk Category Banner -->
+<div class="cyber-card mb-4" style="border-left: 4px solid {% if analysis.risk_level == 'High' %}var(--cyber-danger){% elif analysis.risk_level == 'Medium' %}var(--cyber-warning){% else %}var(--cyber-success){% endif %};">
+  <div class="d-flex align-items-center justify-content-between">
+    <div>
+      <span class="text-muted small text-uppercase fw-semibold">Current Assessed Tier</span>
+      <h3 class="fw-bold {% if analysis.risk_level == 'High' %}text-danger{% elif analysis.risk_level == 'Medium' %}text-warning{% else %}text-success{% endif %} mb-1">
+        {{ analysis.risk_level|upper }} RISK LEVEL (Score: {{ analysis.overall_risk_score|floatformat:1 }}/100)
+      </h3>
+      <p class="text-muted small mb-0">{{ analysis.explanation_summary }}</p>
+    </div>
+    <div>
+      {% if analysis.risk_level == 'High' %}
+        <span class="badge badge-cyber-danger fs-6 px-3 py-2"><i class="bi bi-shield-x me-1"></i> CRITICAL THREAT</span>
+      {% elif analysis.risk_level == 'Medium' %}
+        <span class="badge badge-cyber-warning fs-6 px-3 py-2"><i class="bi bi-shield-exclamation me-1"></i> SUSPICIOUS ACTOR</span>
+      {% else %}
+        <span class="badge badge-cyber-success fs-6 px-3 py-2"><i class="bi bi-shield-check me-1"></i> VERIFIED SAFE</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Matrix Grid -->
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="cyber-card h-100 {% if analysis.risk_level == 'Low' %}border-success{% endif %}">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 class="text-success fw-bold mb-0">Low Risk Tier</h5>
+        <span class="badge bg-success bg-opacity-25 text-success">0 - 34 pts</span>
+      </div>
+      <p class="text-muted small">Profiles exhibiting balanced social graphs, organic content engagement, and normal tenure.</p>
+      <hr style="border-color: var(--cyber-border);">
+      <h6 class="text-white small fw-bold">Standard Protocol:</h6>
+      <ul class="text-muted small ps-3 mb-0">
+        <li>Normal platform permissions.</li>
+        <li>No automated moderation intervention.</li>
+        <li>Organic social propagation approved.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="cyber-card h-100 {% if analysis.risk_level == 'Medium' %}border-warning{% endif %}">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 class="text-warning fw-bold mb-0">Medium Risk Tier</h5>
+        <span class="badge bg-warning bg-opacity-25 text-warning">35 - 69 pts</span>
+      </div>
+      <p class="text-muted small">Accounts showing anomalous ratios, high following velocity, or dormant lurker traits without overt spam payloads.</p>
+      <hr style="border-color: var(--cyber-border);">
+      <h6 class="text-white small fw-bold">Elevated Protocol:</h6>
+      <ul class="text-muted small ps-3 mb-0">
+        <li>Flag account for behavioral tracking.</li>
+        <li>Require CAPTCHA / SMS challenge on next login.</li>
+        <li>Throttle outbound API follow requests.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="cyber-card h-100 {% if analysis.risk_level == 'High' %}border-danger{% endif %}">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 class="text-danger fw-bold mb-0">High Risk Tier</h5>
+        <span class="badge bg-danger bg-opacity-25 text-danger">70 - 100 pts</span>
+      </div>
+      <p class="text-muted small">Confirmed bot algorithms, follower farm accounts, or phishing clone accounts with extreme anomalies.</p>
+      <hr style="border-color: var(--cyber-border);">
+      <h6 class="text-white small fw-bold">Defensive Action Protocol:</h6>
+      <ul class="text-muted small ps-3 mb-0">
+        <li>Quarantine profile from public discovery.</li>
+        <li>Restrict direct messaging and external link clicks.</li>
+        <li>Mandatory government ID verification challenge.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

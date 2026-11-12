@@ -1,0 +1,43 @@
+========================================================================
+FAKE PROFILE DETECTION ONTOLOGY - SAMPLE BENCHMARK INDIVIDUALS
+========================================================================
+
+Individual: Individual_Elena_AI
+  - rdf:type: VerifiedAuthorityProfile
+  - hasUsername: "dr_elena_ai_official"
+  - hasFollowersCount: 94500
+  - hasFollowingCount: 820
+  - hasPostsCount: 1280
+  - hasAccountAgeDays: 2400
+  - hasBioLength: 140
+  - hasProfilePicture: true
+  - isVerified: true
+  - hasSuspicionScore: 2.5
+  - hasRiskCategory: LowRisk
+
+Individual: Individual_Spammer_9921
+  - rdf:type: BotSpammerProfile
+  - hasUsername: "bot_spammer_9921"
+  - hasFollowersCount: 12
+  - hasFollowingCount: 2850
+  - hasPostsCount: 0
+  - hasAccountAgeDays: 7
+  - hasBioLength: 0
+  - hasProfilePicture: false
+  - isVerified: false
+  - hasSuspicionScore: 96.0
+  - violatesRule: Rule_FollowerAsymmetry, Rule_HyperactiveNewAccount, Rule_NoAvatarEmptyBio
+  - hasRiskCategory: HighRisk
+
+Individual: Individual_Organic_Sarah
+  - rdf:type: RegularOrganicUser
+  - hasUsername: "cyber_tech_sarah"
+  - hasFollowersCount: 4820
+  - hasFollowingCount: 620
+  - hasPostsCount: 345
+  - hasAccountAgeDays: 1240
+  - hasBioLength: 115
+  - hasProfilePicture: true
+  - isVerified: false
+  - hasSuspicionScore: 8.0
+  - hasRiskCategory: LowRisk

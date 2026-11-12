@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}ML &amp; Ontology Analysis | @{{ analysis.username }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <a href="{% url 'result' analysis.pk %}" class="btn btn-sm btn-cyber-outline me-2"><i class="bi bi-arrow-left"></i> Back to Result</a>
+      <h3 class="fw-bold text-white mb-0">Dual-Engine Comparative Analysis: @{{ analysis.username }}</h3>
+    </div>
+    <p class="text-muted small mb-0">Side-by-side inspection of Random Forest Machine Learning vs. OWL 2 Semantic Reasoning</p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- ML Engine Card -->
+  <div class="col-lg-6">
+    <div class="cyber-card h-100" style="border-top: 3px solid var(--cyber-blue);">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-robot text-primary fs-4"></i>
+          <div>
+            <h5 class="text-white fw-bold mb-0">Machine Learning Engine</h5>
+            <small class="text-muted">Random Forest Classifier (Scikit-Learn)</small>
+          </div>
+        </div>
+        <span class="badge bg-primary bg-opacity-25 text-info px-2.5 py-1">Weight: 55%</span>
+      </div>
+
+      <div class="p-3 rounded-3 mb-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+        <div class="row text-center">
+          <div class="col-6 border-end border-secondary border-opacity-25">
+            <div class="text-muted small">Fake Probability</div>
+            <div class="h3 fw-bold text-info mb-0">{{ analysis.ml_fake_probability|floatformat:3 }}</div>
+            <div class="text-muted" style="font-size: 0.7rem;">Scale: 0.0 - 1.0</div>
+          </div>
+          <div class="col-6">
+            <div class="text-muted small">Confidence Level</div>
+            <div class="h3 fw-bold text-white mb-0">{{ analysis.ml_confidence|floatformat:1 }}%</div>
+            <div class="text-muted" style="font-size: 0.7rem;">Model Decision Certainty</div>
+          </div>
+        </div>
+      </div>
+
+      <h6 class="text-white fw-semibold mb-2">Key Feature Drivers:</h6>
+      <p class="text-muted small mb-3">Statistical contributions that weighted the Random Forest decision:</p>
+
+      <div class="d-flex flex-column gap-2">
+        {% for feat, imp in ml_importances.items %}
+          <div>
+            <div class="d-flex justify-content-between small mb-1">
+              <span class="text-muted">{{ feat }}</span>
+              <span class="text-info font-monospace">{{ imp }}</span>
+            </div>
+            <div class="progress" style="height: 6px; background-color: rgba(255, 255, 255, 0.05);">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: {% widthratio imp 1 100 %}%;"></div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="text-muted small">Feature importances calculated at training time.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Ontology Engine Card -->
+  <div class="col-lg-6">
+    <div class="cyber-card h-100" style="border-top: 3px solid var(--cyber-purple);">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-diagram-3-fill text-purple fs-4" style="color: #a855f7;"></i>
+          <div>
+            <h5 class="text-white fw-bold mb-0">Semantic Ontology Engine</h5>
+            <small class="text-muted">Protégé OWL 2 &amp; RDFLib Axiom Reasoning</small>
+          </div>
+        </div>
+        <span class="badge bg-purple bg-opacity-25 text-purple px-2.5 py-1" style="color: #c084fc; background: rgba(168, 85, 247, 0.15);">Weight: 45%</span>
+      </div>
+
+      <div class="p-3 rounded-3 mb-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--cyber-border);">
+        <div class="row text-center">
+          <div class="col-6 border-end border-secondary border-opacity-25">
+            <div class="text-muted small">Semantic Risk Score</div>
+            <div class="h3 fw-bold text-purple mb-0" style="color: #c084fc;">{{ analysis.ontology_risk_score|floatformat:1 }}</div>
+            <div class="text-muted" style="font-size: 0.7rem;">Axiom Point Accumulation</div>
+          </div>
+          <div class="col-6">
+            <div class="text-muted small">Semantic Classification</div>
+            <div class="h6 fw-bold text-white mb-0 mt-2 text-truncate">{{ analysis.ontology_verdict }}</div>
+          </div>
+        </div>
+      </div>
+
+      <h6 class="text-white fw-semibold mb-2">Inferred Ontology Concepts:</h6>
+      <div class="d-flex flex-wrap gap-1 mb-3">
+        {% for c in inferred_classes %}
+          <span class="badge bg-dark border text-light px-2.5 py-1" style="border-color: var(--cyber-border) !important;">
+            fpo:{{ c }}
+          </span>
+        {% empty %}
+          <span class="text-muted small">fpo:SocialMediaProfile</span>
+        {% endfor %}
+      </div>
+
+      <h6 class="text-white fw-semibold mb-2">Semantic Rule Axioms Evaluated:</h6>
+      <div class="d-flex flex-column gap-2">
+        {% for rule in rules_triggered %}
+          <div class="p-2 rounded" style="background: rgba(255, 255, 255, 0.02); border-left: 3px solid #a855f7;">
+            <div class="d-flex justify-content-between small">
+              <span class="fw-bold text-white">{{ rule.name }}</span>
+              <span class="text-warning">+{{ rule.points }} pts</span>
+            </div>
+            <div class="text-muted" style="font-size: 0.72rem;">{{ rule.description }}</div>
+          </div>
+        {% empty %}
+          <div class="p-2 rounded text-success small" style="background: rgba(16, 185, 129, 0.05); border-left: 3px solid #10b981;">
+            No ontology rule breaches. Account passed all semantic fraud axioms.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Synthesis Formula Banner -->
+<div class="cyber-card">
+  <div class="d-flex align-items-center gap-3">
+    <i class="bi bi-calculator text-info fs-3"></i>
+    <div>
+      <h6 class="text-white fw-bold mb-1">Hybrid Synthesis Formula</h6>
+      <p class="text-muted small mb-0 font-monospace">
+        Final Risk Score = (0.55 &times; (ML Fake Prob &times; 100)) + (0.45 &times; Ontology Risk Score) = <span class="text-white fw-bold">{{ analysis.overall_risk_score|floatformat:1 }} / 100</span>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

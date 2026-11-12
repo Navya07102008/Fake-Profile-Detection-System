@@ -1,0 +1,28 @@
+========================================================================
+FAKE PROFILE DETECTION ONTOLOGY - CLASS HIERARCHY
+========================================================================
+
+SocialMediaProfile (Root Class)
+├── AuthenticProfile
+│   ├── VerifiedAuthorityProfile (Verified celebrity, public figure, brand)
+│   └── RegularOrganicUser (Ordinary personal or professional human user)
+│
+├── SuspiciousProfile
+│   └── FakeProfile
+│       ├── BotSpammerProfile (Automated mass-follow / spam bot)
+│       ├── GhostLurkerProfile (Dormant empty account without posts or avatar)
+│       └── EngagementAnomalyProfile (Purchased follower farm account)
+│
+RiskCategory
+├── LowRisk (Threat score 0 - 34)
+├── MediumRisk (Threat score 35 - 69)
+└── HighRisk (Threat score 70 - 100)
+
+DetectionRule
+├── Rule_FollowerAsymmetry
+├── Rule_GhostLurker
+├── Rule_HyperactiveNewAccount
+├── Rule_NoAvatarEmptyBio
+├── Rule_EngagementAnomaly
+├── Rule_MachineGeneratedHandle
+└── Rule_AuthenticityMitigation

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Detection History | Fake Profile Detection System{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h3 class="fw-bold text-white mb-1">Detection History &amp; Audit Log</h3>
+    <p class="text-muted small mb-0">Searchable forensic archive of past profile evaluations</p>
+  </div>
+  <a href="{% url 'profile_check' %}" class="btn btn-cyber-primary">
+    <i class="bi bi-plus-circle me-1"></i> New Analysis
+  </a>
+</div>
+
+<!-- Search and Filter Bar -->
+<div class="cyber-card mb-4 p-3">
+  <form method="get" class="row g-2 align-items-center">
+    <div class="col-md-6">
+      <div class="input-group">
+        <span class="input-group-text bg-dark border-end-0 text-muted" style="border-color: var(--cyber-border);"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search target username...">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <select name="risk" class="form-select">
+        <option value="">All Risk Levels</option>
+        <option value="High" {% if filter_risk == 'High' %}selected{% endif %}>High Risk (Fake)</option>
+        <option value="Medium" {% if filter_risk == 'Medium' %}selected{% endif %}>Medium Risk (Suspicious)</option>
+        <option value="Low" {% if filter_risk == 'Low' %}selected{% endif %}>Low Risk (Authentic)</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-flex gap-2">
+      <button type="submit" class="btn btn-cyber-primary w-100">Filter</button>
+      {% if query or filter_risk %}
+        <a href="{% url 'history' %}" class="btn btn-cyber-outline" title="Clear Filters"><i class="bi bi-x-lg"></i></a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- History Table -->
+<div class="cyber-card">
+  <div class="table-responsive">
+    <table class="table table-cyber mb-0">
+      <thead>
+        <tr>
+          <th>Target Username</th>
+          <th>Audit Timestamp</th>
+          <th>Followers / Following</th>
+          <th>Risk Score</th>
+          <th>Risk Level</th>
+          <th>ML Verdict</th>
+          <th>Ontology Verdict</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in analyses %}
+          <tr>
+            <td>
+              <div class="fw-bold text-white">@{{ a.username }}</div>
+              <div class="text-muted" style="font-size: 0.72rem;">ID #{{ a.pk }}</div>
+            </td>
+            <td class="text-muted small">{{ a.created_at|date:"M d, Y H:i" }}</td>
+            <td>
+              <div>{{ a.followers_count }} / {{ a.following_count }}</div>
+              <div class="text-muted" style="font-size: 0.72rem;">Age: {{ a.account_age_days }}d</div>
+            </td>
+            <td>
+              <span class="fw-bold font-monospace {% if a.risk_level == 'High' %}text-danger{% elif a.risk_level == 'Medium' %}text-warning{% else %}text-success{% endif %}">
+                {{ a.overall_risk_score|floatformat:1 }}
+              </span>
+            </td>
+            <td>
+              {% if a.risk_level == 'High' %}
+                <span class="badge badge-cyber-danger">High</span>
+              {% elif a.risk_level == 'Medium' %}
+                <span class="badge badge-cyber-warning">Medium</span>
+              {% else %}
+                <span class="badge badge-cyber-success">Low</span>
+              {% endif %}
+            </td>
+            <td class="small text-info">{{ a.ml_prediction }} ({{ a.ml_fake_probability|floatformat:2 }})</td>
+            <td class="small text-muted">{{ a.ontology_verdict|truncatechars:28 }}</td>
+            <td class="text-end">
+              <a href="{% url 'result' a.pk %}" class="btn btn-sm btn-cyber-outline py-1 px-2" title="View Result">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{% url 'download_pdf' a.pk %}" class="btn btn-sm btn-cyber-outline py-1 px-2 text-danger" title="Download PDF">
+                <i class="bi bi-file-earmark-pdf"></i>
+              </a>
+              <a href="{% url 'delete_history' a.pk %}" class="btn btn-sm btn-cyber-outline py-1 px-2 text-muted hover-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this analysis?');">
+                <i class="bi bi-trash"></i>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8" class="text-center py-5 text-muted">
+              <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+              No historical records found matching current query.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
